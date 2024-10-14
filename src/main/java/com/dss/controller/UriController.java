@@ -18,12 +18,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @NoArgsConstructor
-@RequestMapping(value = "/products")
-public class ProductController {
+@RequestMapping(value = "/")
+public class UriController {
 
     @Autowired
     private ProductService productService;
-
 
     @GetMapping
     public String getAllProducts(Model model) {
@@ -31,4 +30,10 @@ public class ProductController {
         model.addAttribute("products", products);
         return "products"; // Nombre del archivo Thymeleaf en src/main/resources/templates/products.html
     }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login"; // Retorna el nombre de la plantilla sin la extensión
+    }
+
 }

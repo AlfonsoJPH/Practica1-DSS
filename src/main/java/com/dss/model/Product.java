@@ -7,16 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
+@Getter @Setter
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Getter @Setter Long id;
-    private @Getter @Setter String name;
-    private @Getter @Setter double price;
+    private Long id;
+    private String name;
+    private double price;
 
     public Product(String name, double price) {
         this.name = name;

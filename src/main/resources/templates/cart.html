@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Carrito de Compras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navbar con ícono de inicio -->
+        <nav class="navbar navbar-light bg-light mb-4">
+            <a class="navbar-brand" href="/">
+                <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Inicio" width="30" height="30">
+            </a>
+            <div class="d-flex">
+                <a href="/products/admin" class="btn btn-primary me-2">Administración</a>
+                <a href="/" class="btn btn-secondary">Seguir Comprando</a>
+            </div>
+        </nav>
+
+        <!-- Título Principal -->
+        <h1 class="text-center mb-5">Carrito de Compras</h1>
+
+        <!-- Lista de Productos en el Carrito -->
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Productos en el Carrito</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li th:each="product : ${cartProducts}" class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong th:text="${product.name}">Nombre del Producto</strong>
+                                    <p class="mb-0 text-muted" th:text="'$' + ${product.price}">Precio del Producto</p>
+                                </div>
+                                <div>
+                                    <form th:action="@{/cart/remove/{id}(id=${product.id})}" method="post" class="d-inline-block">
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enlace para seguir comprando -->
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-secondary">Seguir Comprando</a>
+        </div>
+    </div>
+</body>
+</html>

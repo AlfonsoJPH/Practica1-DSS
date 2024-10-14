@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Administración de Productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navbar con ícono de inicio -->
+        <nav class="navbar navbar-light bg-light mb-4">
+            <a class="navbar-brand" href="/">
+                <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Inicio" width="30" height="30">
+            </a>
+            <div class="d-flex">
+                <a href="/products" class="btn btn-secondary me-2">Ver Catálogo de Productos</a>
+                <a href="/cart" class="btn btn-secondary me-2">Ver Carrito</a>
+                <a href="/admin/download-db-sql" class="btn btn-primary">Descargar Base de Datos (SQL)</a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </nav>
+
+        <!-- Título Principal -->
+        <h1 class="text-center mb-5">Administrar Productos</h1>
+
+        <!-- Botón para Agregar Nuevo Producto -->
+        <div class="mb-3 text-center">
+            <a href="/admin/formulario-producto" class="btn btn-primary">Agregar Nuevo Producto</a>
+        </div>
+
+        <!-- Lista de Productos Existentes -->
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Productos Existentes</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li th:each="product : ${products}" class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong th:text="${product.name}">Nombre del Producto</strong>
+                                    <p class="mb-0 text-muted" th:text="'$' + ${product.price}">Precio del Producto</p>
+                                </div>
+                                <div>
+                                    <a th:href="@{/admin/formulario-producto(id=${product.id})}" class="btn btn-warning btn-sm">Editar</a>
+                                    <form th:action="@{/admin/delete/{id}(id=${product.id})}" method="post" class="d-inline-block">
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
