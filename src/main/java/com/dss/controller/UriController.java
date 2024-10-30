@@ -36,4 +36,13 @@ public class UriController {
         return "login"; // Retorna el nombre de la plantilla sin la extensión
     }
 
+    @GetMapping("/logout")
+    public String logoutPage() {
+        return "redirect:/login?logout"; // Retorna el nombre de la plantilla sin la extensión
+    }
+
+    @GetMapping("/error")
+    public String errorPage() {
+        return "error"; // Retorna el nombre de la plantilla sin la extensión
+    }
 }

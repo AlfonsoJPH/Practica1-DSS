@@ -3,11 +3,22 @@ package com.dss.service;
 import com.dss.model.Product;
 import com.dss.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 @Service
@@ -77,7 +88,52 @@ public class CartService {
         }
     }
 
+    //remove all products from cart
+    public void removeAllProductsFromCart(HttpServletResponse response) {
+        Cookie cookie = new Cookie(CART_COOKIE_NAME, "");
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
     public Product getProductById(Long id) {
         return productRepo.findById(id).orElse(null);
+    }
+
+    public ByteArrayOutputStream generateTicket(String cartCookie) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();  // Usar ByteArrayOutputStream aquí
+        try {
+            // Obtener el nombre de usuario autenticado
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            // Obtener productos del carrito (deberás implementar esta función)
+            List<Product> products = getProductsFromCart(cartCookie);
+
+            // Crear el documento PDF
+            Document document = new Document();
+            PdfWriter.getInstance(document, outputStream);  // Escribir en el ByteArrayOutputStream
+            document.open();
+
+            // Añadir contenido al documento PDF
+            document.add(new Paragraph("Ticket de compra para " + username));
+            document.add(new Paragraph("Productos:"));
+
+            // Añadir cada producto y su precio
+            for (Product product : products) {
+                document.add(new Paragraph(product.getName() + " - " + product.getPrice()));
+            }
+
+            // Calcular el total
+            double total = products.stream().mapToDouble(Product::getPrice).sum();
+            document.add(new Paragraph("Total: " + total));
+
+            // Cerrar el documento PDF
+            document.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
+        // Retornar el contenido del PDF como ByteArrayOutputStream
+        return outputStream;
     }
 }

@@ -12,8 +12,11 @@
                 <img src="https://img.icons8.com/ios-filled/50/000000/home.png" alt="Inicio" width="30" height="30">
             </a>
             <div class="d-flex">
-                <a href="/products/admin" class="btn btn-primary me-2">Administración</a>
+                <a href="/admin" class="btn btn-primary me-2">Administración</a>
                 <a href="/" class="btn btn-secondary">Seguir Comprando</a>
+                <form th:action="@{/logout}" method="post" class="d-inline-block">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
             </div>
         </nav>
 
@@ -48,7 +51,7 @@
 
         <!-- Enlace para seguir comprando -->
         <div class="text-center mt-4">
-            <a href="/" class="btn btn-secondary">Seguir Comprando</a>
+            <a href="/cart/checkout" class="btn btn-secondary">Comprar</a>
         </div>
     </div>
 </body>
