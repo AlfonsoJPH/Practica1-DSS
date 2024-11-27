@@ -24,7 +24,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorizeRequests -> {
                 authorizeRequests
-                    .requestMatchers("/", "/products").permitAll()
+                    .requestMatchers("/", "/products", "/api/**", "/api/cart").permitAll()
                     .requestMatchers("/cart/**", "/cart/checkout").hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated();
