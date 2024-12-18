@@ -1,6 +1,9 @@
 package com.dss.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,9 @@ import lombok.NoArgsConstructor;
 import com.dss.model.Product;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,8 +40,28 @@ public class ProductController {
         model.addAttribute("products", products);
   //       GsonBuilder builder = new GsonBuilder();
 		// Gson gson = builder.create();
+        System.out.println("Peticion");
         return products;
     }
+
+    @GetMapping("/api/products-by-id")
+    @ResponseBody
+    public List<Product> getProductsByIdAPI(@RequestParam String ids, Model model) {
+        List<Integer> idList = Arrays.stream(ids.split("_"))
+                                     .map(Integer::parseInt)
+                                     .collect(Collectors.toList());
+        List<Product> products = new ArrayList<>();
+        for (int id : idList) {
+            Product product = productService.getProductById((long) id);
+            if (product != null && !products.contains(product)) {
+                products.add(product);
+            }
+        }
+        model.addAttribute("products", products);
+        System.out.println("Peticion ID");
+        return products;
+    }
+    
     @GetMapping("/products")
     public String getAllProducts(Model model) {
         List<Product> products = productService.getAllProducts();

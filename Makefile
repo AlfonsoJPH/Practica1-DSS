@@ -2,7 +2,7 @@ all: build run
 build:
 	mvn clean install
 run:
-	cp /D1/Projects/OPhabs/target/original*.jar /D1/.minecraft/plugins/OPhabs.jar
+	java -jar target/practica1-0.0.1-SNAPSHOT.jar
 doxygen:
 	doxygen Doxyfile
 doc:
