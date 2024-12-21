@@ -32,36 +32,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-
-    @GetMapping("/api/products")
-    @ResponseBody
-    public List<Product> getAllProductsAPI(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-  //       GsonBuilder builder = new GsonBuilder();
-		// Gson gson = builder.create();
-        System.out.println("Peticion");
-        return products;
-    }
-
-    @GetMapping("/api/products-by-id")
-    @ResponseBody
-    public List<Product> getProductsByIdAPI(@RequestParam String ids, Model model) {
-        List<Integer> idList = Arrays.stream(ids.split("_"))
-                                     .map(Integer::parseInt)
-                                     .collect(Collectors.toList());
-        List<Product> products = new ArrayList<>();
-        for (int id : idList) {
-            Product product = productService.getProductById((long) id);
-            if (product != null && !products.contains(product)) {
-                products.add(product);
-            }
-        }
-        model.addAttribute("products", products);
-        System.out.println("Peticion ID");
-        return products;
-    }
-    
     @GetMapping("/products")
     public String getAllProducts(Model model) {
         List<Product> products = productService.getAllProducts();
