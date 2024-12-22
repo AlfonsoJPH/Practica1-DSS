@@ -24,9 +24,9 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorizeRequests -> {
                 authorizeRequests
-                    .requestMatchers("/", "/products", "/api/**", "/api/cart", "/api/products/**").permitAll()
+                    .requestMatchers("/", "/products", "/api/**", "/api/login", "/api/login/", "/api/cart", "/api/products/**").permitAll()
                     .requestMatchers("/cart/**", "/cart/checkout").hasAnyRole("USER", "ADMIN")
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/admin/**", "/h2-console/**").hasRole("ADMIN")
                     .anyRequest().authenticated();
             })
             .formLogin(formLogin -> formLogin

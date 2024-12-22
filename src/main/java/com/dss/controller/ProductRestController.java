@@ -1,7 +1,9 @@
 package com.dss.controller;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,8 @@ public class ProductRestController {
 
     @Autowired
     private ProductService productService;
+    private final String expectedToken = Base64.getEncoder().encodeToString("admin:admin".getBytes(StandardCharsets.UTF_8));
+
 
 
     @GetMapping("/api/products")
@@ -63,9 +67,11 @@ public class ProductRestController {
         return products;
     }
 
-    @PostMapping("/api/products/add")
+    @GetMapping("/api/products/add")
     @ResponseBody
-    public Integer Product(@RequestParam String name, @RequestParam String price) {
+    public Integer Product(@RequestParam String name, @RequestParam String price, @RequestParam String token) {
+        if (!token.equals(this.expectedToken))
+            return -1;
         double priceP = Double.parseDouble(price);
         Product product = new Product(name, priceP);
         productService.saveProduct(product);
@@ -75,9 +81,11 @@ public class ProductRestController {
         // return "redirect:/products";
     }
 
-    @PostMapping("/api/products/edit/{id}")
+    @GetMapping("/api/products/edit")
     @ResponseBody
-    public Integer editProduct(@PathVariable Long id, @RequestParam String name, @RequestParam double price) {
+    public Integer editProduct(@RequestParam Long id, @RequestParam String name, @RequestParam double price, @RequestParam String token) {
+        if (!token.equals(this.expectedToken))
+            return -1;
         Product product = productService.getProductById(id);
         System.out.println(name);
         if (product != null) {
@@ -90,9 +98,12 @@ public class ProductRestController {
         // return "redirect:/products";
     }
 
-    @PostMapping("/api/products/delete")
+    @GetMapping("/api/products/delete")
     @ResponseBody
-    public Integer deleteProduct(@PathVariable Long id) {
+    public Integer deleteProduct(@RequestParam Long id, @RequestParam String token) {
+        if (!token.equals(this.expectedToken))
+            return -1;
+
         Product product = productService.getProductById(id);
         if (product != null) {
             productService.deleteProduct(id);
