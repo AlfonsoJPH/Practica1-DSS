@@ -43,7 +43,6 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        // Usuario administrador configurado en memoria
         UserDetails admin = User.withUsername("admin")
             .password(passwordEncoder().encode("admin"))
             .roles("ADMIN")
@@ -52,7 +51,6 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin) {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                // Si el usuario no es "admin", le asignamos el rol USER
                 if (!username.equals("admin")) {
                     return User.withUsername(username)
                         .password(passwordEncoder().encode("password"))  // Contraseña predeterminada

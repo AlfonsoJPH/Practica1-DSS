@@ -43,9 +43,6 @@ public class ProductRestController {
     public List<Product> getAllProductsAPI(Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
-  //       GsonBuilder builder = new GsonBuilder();
-		// Gson gson = builder.create();
-        System.out.println("Peticionn");
         return products;
     }
 
@@ -63,7 +60,6 @@ public class ProductRestController {
             }
         }
         model.addAttribute("products", products);
-        System.out.println("Peticion ID");
         return products;
     }
 
@@ -75,10 +71,8 @@ public class ProductRestController {
         double priceP = Double.parseDouble(price);
         Product product = new Product(name, priceP);
         productService.saveProduct(product);
-        System.out.println("Peticion add");
 
         return 0;
-        // return "redirect:/products";
     }
 
     @GetMapping("/api/products/edit")
@@ -87,7 +81,6 @@ public class ProductRestController {
         if (!token.equals(this.expectedToken))
             return -1;
         Product product = productService.getProductById(id);
-        System.out.println(name);
         if (product != null) {
             product.setName(name);
             product.setPrice(price);
@@ -95,7 +88,6 @@ public class ProductRestController {
             return 0;
         }
         return 1;
-        // return "redirect:/products";
     }
 
     @GetMapping("/api/products/delete")
@@ -110,6 +102,5 @@ public class ProductRestController {
             return 0;
         }
         return 1;
-        // return "redirect:/products";
     }
 }

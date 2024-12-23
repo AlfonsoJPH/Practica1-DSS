@@ -32,7 +32,6 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    //Para web usando la anterior estructura de devolver plantillas
     @GetMapping("/cart")
     public String viewCart(@CookieValue(value = CartService.CART_COOKIE_NAME, required = false) String cartCookie, Model model) {
         List<Product> cartProducts = cartService.getProductsFromCart(cartCookie);
@@ -42,9 +41,8 @@ public class CartController {
 
     @PostMapping("/cart/add/{id}")
     public String addToCart(@PathVariable("id") Long productId, @CookieValue(value = CartService.CART_COOKIE_NAME, required = false) String cartCookie, HttpServletResponse response) {
-        // Tu lógica para añadir el producto al carrito
         cartService.addProductToCart(productId, cartCookie, response);
-        return "redirect:/products"; // O la URL a la que deseas redirigir
+        return "redirect:/products"; 
     }
     @PostMapping("/cart/remove/{productId}")
     public String removeFromCart(@PathVariable Long productId, @CookieValue(value = CartService.CART_COOKIE_NAME, required = false) String cartCookie, HttpServletResponse response) {
@@ -54,16 +52,13 @@ public class CartController {
 
     @GetMapping("/cart/checkout")
     public ResponseEntity<ByteArrayResource> downloadTicket(@CookieValue(value = CartService.CART_COOKIE_NAME, required = false) String cartCookie, HttpServletResponse response) {
-        // Generar el ticket como ByteArrayOutputStream
         ByteArrayOutputStream pdfData = cartService.generateTicket(cartCookie);
 
-        // Convertir el ByteArrayOutputStream a ByteArrayResource
         ByteArrayResource resource = new ByteArrayResource(pdfData.toByteArray());
 
         cartService.removeAllProductsFromCart(response);
-        // Configurar la respuesta para descargar el archivo PDF
         return ResponseEntity.ok()
-                .contentLength(pdfData.size())  // Usar size() en lugar de length()
+                .contentLength(pdfData.size())  
                 .header("Content-Disposition", "attachment; filename=ticket.pdf")
                 .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                 .body(resource);

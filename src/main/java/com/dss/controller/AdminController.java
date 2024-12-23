@@ -71,7 +71,6 @@ public class AdminController {
         productService.saveProduct(product);
 
         return "redirect:/admin";
-        // return "redirect:/products";
     }
 
     @PostMapping("/edit/{id}")
@@ -83,7 +82,6 @@ public class AdminController {
             productService.saveProduct(product);
         }
         return "redirect:/admin";
-        // return "redirect:/products";
     }
 
     @PostMapping("/delete/{id}")
@@ -93,6 +91,5 @@ public class AdminController {
             productService.deleteProduct(id);
         }
         return "redirect:/admin";
-        // return "redirect:/products";
     }
 }

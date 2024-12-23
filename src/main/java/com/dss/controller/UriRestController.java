@@ -34,7 +34,6 @@ public class UriRestController {
     public Map<String, String> login(@RequestParam String username, @RequestParam String password) {
         String token = username + ":" + password;
         String encodedToken = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
-        System.out.println(encodedToken);
         Map<String, String> response = new HashMap<>();
         response.put("token", encodedToken);
         return response;
@@ -42,7 +41,6 @@ public class UriRestController {
     @GetMapping("/api/checkPrivileges")
     @ResponseBody
     public Boolean checkPrivileges  (@RequestParam String token) {
-        System.out.println("Checking " + token + " == " + expectedToken + " ");
         return token.equals(expectedToken);
     }
 

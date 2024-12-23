@@ -37,22 +37,17 @@ public class CartRestController {
         model.addAttribute("cartProducts", cartProducts);
         GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		System.out.println(gson.toJson(cartProducts));
-        return "redirect:/products"; // O la URL a la que deseas redirigir
+        return "redirect:/products";
     }
 
     @GetMapping("/api/cart/checkout")
     public ResponseEntity<ByteArrayResource> downloadTicketAPI(@RequestParam String ids,  HttpServletResponse response) {
-        // Generar el ticket como ByteArrayOutputStream
         ByteArrayOutputStream pdfData = cartService.generateTicket(ids);
-        System.out.println(ids);
 
-        // Convertir el ByteArrayOutputStream a ByteArrayResource
         ByteArrayResource resource = new ByteArrayResource(pdfData.toByteArray());
 
-        // Configurar la respuesta para descargar el archivo PDF
         return ResponseEntity.ok()
-                .contentLength(pdfData.size())  // Usar size() en lugar de length()
+                .contentLength(pdfData.size()) 
                 .header("Content-Disposition", "inline; filename=ticket.pdf")
                 .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
                 .body(resource);
