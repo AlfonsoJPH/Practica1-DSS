@@ -24,9 +24,9 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authorizeRequests -> {
                 authorizeRequests
-                    .requestMatchers("/", "/products").permitAll()
+                    .requestMatchers("/", "/products", "/api/**", "/api/login", "/api/login/", "/api/cart", "/api/products/**").permitAll()
                     .requestMatchers("/cart/**", "/cart/checkout").hasAnyRole("USER", "ADMIN")
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/admin/**", "/h2-console/**").hasRole("ADMIN")
                     .anyRequest().authenticated();
             })
             .formLogin(formLogin -> formLogin
@@ -43,7 +43,6 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        // Usuario administrador configurado en memoria
         UserDetails admin = User.withUsername("admin")
             .password(passwordEncoder().encode("admin"))
             .roles("ADMIN")
@@ -52,7 +51,6 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin) {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                // Si el usuario no es "admin", le asignamos el rol USER
                 if (!username.equals("admin")) {
                     return User.withUsername(username)
                         .password(passwordEncoder().encode("password"))  // Contraseña predeterminada

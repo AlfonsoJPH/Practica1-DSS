@@ -46,7 +46,6 @@ public class CartService {
     }
 
     public void addProductToCart(Long productId, String cartCookie, HttpServletResponse response) {
-        // Obtener productos actuales del carrito
         List<Long> productIds = new ArrayList<>();
         if (cartCookie != null && !cartCookie.isEmpty()) {
             String[] existingIds = cartCookie.split("_");
@@ -55,10 +54,8 @@ public class CartService {
             }
         }
 
-        // Agregar el nuevo ID del producto
         productIds.add(productId);
 
-        // Guardar el nuevo valor de la cookie
         String cookieValue = String.join("_", productIds.stream().map(String::valueOf).toArray(String[]::new));
         Cookie cookie = new Cookie(CART_COOKIE_NAME, cookieValue);
         cookie.setPath("/");
@@ -68,7 +65,6 @@ public class CartService {
 
 
     public void removeProductFromCart(Long productId, String cartCookie, HttpServletResponse response) {
-        // Obtener productos actuales del carrito
         List<Long> productIds = new ArrayList<>();
         if (cartCookie != null && !cartCookie.isEmpty()) {
             String[] existingIds = cartCookie.split("_");
@@ -76,10 +72,8 @@ public class CartService {
                 productIds.add(Long.valueOf(id));
             }
 
-            // Eliminar el ID del producto
             productIds.remove(productId);
 
-            // Guardar el nuevo valor de la cookie
             String cookieValue = String.join("_", productIds.stream().map(String::valueOf).toArray(String[]::new));
             Cookie cookie = new Cookie(CART_COOKIE_NAME, cookieValue);
             cookie.setPath("/");
@@ -88,7 +82,6 @@ public class CartService {
         }
     }
 
-    //remove all products from cart
     public void removeAllProductsFromCart(HttpServletResponse response) {
         Cookie cookie = new Cookie(CART_COOKIE_NAME, "");
         cookie.setPath("/");
@@ -103,37 +96,29 @@ public class CartService {
     public ByteArrayOutputStream generateTicket(String cartCookie) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();  // Usar ByteArrayOutputStream aquí
         try {
-            // Obtener el nombre de usuario autenticado
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-            // Obtener productos del carrito (deberás implementar esta función)
             List<Product> products = getProductsFromCart(cartCookie);
 
-            // Crear el documento PDF
             Document document = new Document();
             PdfWriter.getInstance(document, outputStream);  // Escribir en el ByteArrayOutputStream
             document.open();
 
-            // Añadir contenido al documento PDF
             document.add(new Paragraph("Ticket de compra para " + username));
             document.add(new Paragraph("Productos:"));
 
-            // Añadir cada producto y su precio
             for (Product product : products) {
                 document.add(new Paragraph(product.getName() + " - " + product.getPrice()));
             }
 
-            // Calcular el total
             double total = products.stream().mapToDouble(Product::getPrice).sum();
             document.add(new Paragraph("Total: " + total));
 
-            // Cerrar el documento PDF
             document.close();
         } catch (DocumentException e) {
             e.printStackTrace();
         }
 
-        // Retornar el contenido del PDF como ByteArrayOutputStream
         return outputStream;
     }
 }
